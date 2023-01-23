@@ -1,0 +1,138 @@
+.search {
+  padding-bottom: 48px;
+  display: flex;
+  flex-direction: column;
+}
+
+.search__fieldset {
+  margin: 0;
+  border: none;
+  padding: 0 0 13px 0;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #424242;
+  transition: border-color .3s ease;
+}
+
+.search__fieldset:focus-within {
+  border-color: #fff;
+}
+
+.search__input {
+  flex-grow: 1;
+  width: 100%;
+  margin-right: 20px;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  color: #fff;
+  font-size: 28px;
+  line-height: 1.21;
+  font-weight: 500;
+}
+
+.search__input:focus {
+  outline: none;
+}
+
+.search__input::placeholder {
+  color: #8B8B8B;
+}
+
+.search__btn {
+  padding: 0;
+  border: none;
+  width: 80px;
+  height: 34px;
+  border-radius: 48px;
+  background-color: #4285F4;
+  background-image: url('../../images/search-icon.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 22px 22px;
+  cursor: pointer;
+}
+
+.search__label {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 32px;
+  font-size: 13px;
+  line-height: 1.38;
+  user-select: none;
+  position: relative;
+  cursor: pointer;
+}
+
+.search__checkbox {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+.search__label::before {
+  content: '';
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  border-radius: 20px;
+  margin-right: 14px;
+  background-color: #343434;
+}
+
+.search__label::after {
+  content: '';
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  background-color: #A0A0A0;
+  top: 2px;
+  left: 2px;
+  transition: all .3s ease;
+}
+
+.search__checkbox:checked+.search__label::after {
+  left: 17px;
+  background-color: #2BE080;
+}
+
+@media (max-width: 768px) {
+  .search__label {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+
+  .search__label::before {
+    margin-right: 0;
+    margin-left: 14px;
+  }
+
+  .search__label::after {
+    left: auto;
+    right: 17px;
+  }
+
+  .search__checkbox:checked+.search__label::after {
+    left: auto;
+    right: 2px;
+  }
+}
+
+@media (max-width: 425px) {
+  .search__fieldset {
+    padding: 0 0 9px 0;
+  }
+
+  .search__input {
+    font-size: 18px;
+  }
+
+  .search__label {
+    align-self: center;
+    font-size: 11px;
+  }
+}
