@@ -1,0 +1,146 @@
+.profile {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 74px);
+  max-width: 410px;
+  margin: 0 auto;
+  padding: 74px 0 70px 0;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.profile__title {
+  text-align: center;
+  margin: 0 0 107px 0;
+  font-size: 24px;
+  line-height: 1.21;
+  font-weight: 500;
+}
+
+.profile__item {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  column-gap: 20px;
+  padding: 16px 0;
+}
+
+.profile__item:not(:last-of-type) {
+  border-bottom: 1px solid #424242;
+}
+
+.profile__item-name {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.21;
+  width: max-content;
+}
+
+.profile__item-input {
+  flex-grow: 1;
+  text-align: end;
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  font-size: 11px;
+  line-height: 1.21;
+  color: #fff;
+}
+
+.profile__item-input::placeholder {
+  color: #fff;
+}
+
+.profile__item-input:focus {
+  outline: none;
+}
+
+.profile__item-error {
+  position: absolute;
+  bottom: -189px;
+  font-size: 11px;
+  line-height: 1.21;
+  color: #EE3465;
+  text-align: center;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: max-content;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .3s ease;
+}
+
+.profile__item-error_active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.profile__btn {
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  width: max-content;
+  font-size: 13px;
+  line-height: 1.21;
+  cursor: pointer;
+}
+
+.profile__btn:first-of-type {
+  margin: 204px 0 16px 0;
+}
+
+.profile__btn-edit {
+  color: #fff;
+}
+
+.profile__btn-logout {
+  color: #EE3465;
+  font-weight: 500;
+}
+
+.profile__btn-save {
+  width: 100%;
+  border: none;
+  background-color: #4285F4;
+  border-radius: 3px;
+  height: 45px;
+  font-size: 14px;
+  line-height: 1.21;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+}
+
+.profile__btn-save:disabled {
+  background-color: #F8F8F8;
+  color: #C2C2C2;
+  cursor: default;
+}
+
+@media (max-width: 768px) and (min-height: 1024px) {
+  .profile {
+    padding: 236px 0 269px 0;
+  }
+}
+
+@media (max-width: 450px) {
+  .profile {
+    padding: 70px 30px 40px 30px;
+  }
+
+  .profile__title {
+    margin: 0 0 80px 0;
+  }
+
+  .profile__btn {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 450px) and (min-height: 780px) {
+  .profile__btn:first-of-type {
+    margin: 363px 0 16px 0;
+  }
+}
