@@ -1,23 +1,17 @@
-import React, { useState, useCallback} from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 import AuthForm from '../AuthForm/AuthForm';
+import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 
-function Login({ onLogin }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-
-  const resetForm = useCallback(() => {
-    setEmail('');
-    setPassword('');
-  }, []);
+function Login({ onLogin, loginError }) {
+  const { values, handleChange, isValid, errors } = useFormWithValidation({});
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onLogin({ email, password })
-      .then(resetForm)
-      .then(() => navigate('/movies'))
+    onLogin({
+      email: values.userEmail,
+      password: values.password
+    })
   }
 
   return (
@@ -30,33 +24,38 @@ function Login({ onLogin }) {
       redirectTo='/signup'
       redirectLink='Регистрация'
       handleSubmit={handleSubmit}
+      isValid={isValid}
+      submitError={loginError}
     >
       <fieldset className='auth__fieldset'>
         <label className='auth__label'>E-mail
           <input
-            className='auth__item'
-            id='email'
+            className={`auth__item ${errors.userEmail ? 'auth__item_error' : ''}`}
+            id='userEmail'
             type='email'
-            name='email'
-            value={email}
-            onChange={({ target }) => setEmail(target.value)}
+            name='userEmail'
+            value={values.userEmail || ''}
+            onChange={handleChange}
             required
+            pattern='^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$'
           />
-          <span className='auth__error'></span>
+          <span className='auth__error auth__error-input'>{errors.userEmail}</span>
         </label>
         <label className='auth__label'>Пароль
           <input
-            className='auth__item auth__item_error'
+            className={`auth__item ${errors.password ? 'auth__item_error' : ''}`}
             id='password'
             type='password'
             name='password'
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
+            value={values.password || ''}
+            onChange={handleChange}
             required
+            minLength='6'
           />
-          <span className='auth__error'>Что-то пошло не так...</span>
+          <span className='auth__error auth__error-input'>{errors.password}</span>
         </label>
       </fieldset>
+      <span className='auth__error auth__error-form'>{loginError}</span>
     </AuthForm>
   );
 }

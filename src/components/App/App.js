@@ -13,20 +13,20 @@ import Login from '../Login/Login';
 import Register from '../Register/Register';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import ProtectedRoute from '../ProtectedRoute';
-import moviesAuth from '../../utils/auth';
+import moviesAuth from '../../utils/moviesAuth';
 import mainApi from '../../utils/MainApi';
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
-  const [userData, setUserData] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
+  const [profileFormIsReadOnly, setProfileFormIsReadOnly] = useState(true);
+  const [formError, setFormError] = useState('');
   const navigate = useNavigate();
 
   const auth = (jwt) => {
     return moviesAuth.validationToken(jwt).then((res) => {
       if (res) {
         setLoggedIn(true);
-        setUserData(res);
       }
     })
     .catch((err) => {
@@ -53,10 +53,19 @@ function App() {
       return res;
     })
     .then(() => {
-      navigate('/signin')
+      onLogin({ email, password })
+    })
+    .then(() => {
+      navigate('/movies')
     })
     .catch((err) => {
-      console.log(`Ошибка: ${err}`);
+      if (err === 409) {
+        setFormError('Пользователь с таким email уже существует.');
+        setTimeout(() => {setFormError('')}, 4000);
+      } else {
+        setFormError('При регистрации произошла ошибка.');
+        setTimeout(() => {setFormError('')}, 4000);
+      }
     })
   }
 
@@ -67,14 +76,22 @@ function App() {
         setLoggedIn(true);
       }
     })
+    .then(() => {
+      navigate('/movies')
+    })
     .catch((err) => {
-      console.log(`Ошибка: ${err}`);
+      if (err === 401) {
+        setFormError('Вы ввели неправильный логин или пароль.');
+        setTimeout(() => {setFormError('')}, 4000);
+      } else {
+        setFormError('При авторизации произошла ошибка.');
+        setTimeout(() => {setFormError('')}, 4000);
+      }
     })
   }
 
   function signOut() {
     setLoggedIn(false);
-    setUserData({});
     setCurrentUser({});
     localStorage.removeItem('jwt');
     navigate('/');
@@ -89,6 +106,27 @@ function App() {
       console.log(`Ошибка: ${err}`);
     })
   }, [loggedIn])
+
+  function handleEditUserInfo() {
+    setProfileFormIsReadOnly(!profileFormIsReadOnly);
+  }
+
+  function handleUpdateUser(e) {
+    mainApi.setUserInfo(e)
+    .then((res) => {
+      setCurrentUser(res);
+      setProfileFormIsReadOnly(!profileFormIsReadOnly);
+    })
+    .catch((err) => {
+      if (err === 409) {
+        setFormError('Пользователь с таким email уже существует.');
+        setTimeout(() => {setFormError('')}, 4000);
+      } else {
+        setFormError('При обновлении профиля произошла ошибка.');
+        setTimeout(() => {setFormError('')}, 4000);
+      }
+    })
+  }
 
   return (
     <div className='page'>
@@ -117,15 +155,18 @@ function App() {
               element={
                 <ProtectedRoute loggedIn={loggedIn}>
                   <Profile
-                    userData={userData}
+                    isReadOnly={profileFormIsReadOnly}
+                    profileError={formError}
+                    handleEdit={handleEditUserInfo}
+                    onUpdateUser={handleUpdateUser}
                     signOut={signOut}
                   />
                 </ProtectedRoute>
               }
             />
           </Route>
-          <Route path='/signin' element={<Login onLogin={onLogin} />} />
-          <Route path='/signup' element={<Register onRegister={onRegister} />} />
+          <Route path='/signin' element={<Login onLogin={onLogin} loginError={formError} />} />
+          <Route path='/signup' element={<Register onRegister={onRegister} registerError={formError} />} />
           <Route path='*' element={<PageNotFound />} />
         </Routes>
       </CurrentUserContext.Provider>
