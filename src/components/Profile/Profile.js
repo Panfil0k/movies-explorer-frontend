@@ -5,7 +5,7 @@ import './Profile.css';
 
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 
-function Profile({ isReadOnly, handleEdit, signOut, onUpdateUser, profileError }) {
+function Profile({ isReadOnly, handleEdit, signOut, onUpdateUser, profileSuccess, profileError }) {
   const currentUser = React.useContext(CurrentUserContext);
   const { values, handleChange, setValues, isValid, errors, resetForm } = useFormWithValidation({});
   const notDiffer = values.userName === currentUser.name && values.userEmail === currentUser.email;
@@ -79,6 +79,7 @@ function Profile({ isReadOnly, handleEdit, signOut, onUpdateUser, profileError }
           :
           <button className='profile__btn profile__btn-save hovered' type='submit' disabled={!isValid || notDiffer || profileError}>Сохранить</button>
         }
+        <span className={`profile__success ${profileSuccess ? 'profile__success_active' : ''}`}>Успешно сохранено!</span>
         <span className={`profile__error profile__error-form ${profileError ? 'profile__error_active' : ''}`}>{profileError}</span>
         { notDiffer && !isReadOnly && <span className='profile__error profile__error-form profile__error_active'>Измените данные для сохранения.</span>}
         { !isReadOnly && <span className='profile__cancellation hovered' onClick={cancelEdit}>Передумали?</span> }

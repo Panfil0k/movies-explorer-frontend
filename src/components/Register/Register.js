@@ -42,7 +42,7 @@ function Register({ onRegister, registerError }) {
             maxLength='30'
             pattern='^[a-zA-Z\- \u0400-\u04FF]*$'
           />
-          <span className='auth__error auth__error-input'>{errors.userName}</span>
+          <span className={`auth__error auth__error-input ${errors.userName ? 'auth__error_active' : ''}`}>{errors.userName}</span>
         </label>
         <label className='auth__label'>E-mail
           <input
@@ -55,7 +55,7 @@ function Register({ onRegister, registerError }) {
             required
             pattern='^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$'
           />
-          <span className='auth__error auth__error-input'>{errors.userEmail}</span>
+          <span className={`auth__error auth__error-input ${errors.userEmail ? 'auth__error_active' : ''}`}>{errors.userEmail}</span>
         </label>
         <label className='auth__label'>Пароль
           <input
@@ -68,10 +68,10 @@ function Register({ onRegister, registerError }) {
             required
             minLength='6'
           />
-          <span className='auth__error auth__error-input'>{errors.password}</span>
+          <span className={`auth__error auth__error-input ${errors.password ? 'auth__error_active' : ''}`}>{errors.password}</span>
         </label>
       </fieldset>
-      <span className='auth__error auth__error-form'>{registerError}</span>
+      <span className={`auth__error auth__error-form ${registerError ? 'auth__error_active' : ''}`}>{registerError}</span>
     </AuthForm>
   );
 }

@@ -39,7 +39,7 @@ function Login({ onLogin, loginError }) {
             required
             pattern='^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$'
           />
-          <span className='auth__error auth__error-input'>{errors.userEmail}</span>
+          <span className={`auth__error auth__error-input ${errors.userEmail ? 'auth__error_active' : ''}`}>{errors.userEmail}</span>
         </label>
         <label className='auth__label'>Пароль
           <input
@@ -52,10 +52,10 @@ function Login({ onLogin, loginError }) {
             required
             minLength='6'
           />
-          <span className='auth__error auth__error-input'>{errors.password}</span>
+          <span className={`auth__error auth__error-input ${errors.password ? 'auth__error_active' : ''}`}>{errors.password}</span>
         </label>
       </fieldset>
-      <span className='auth__error auth__error-form'>{loginError}</span>
+      <span className={`auth__error auth__error-form ${loginError ? 'auth__error_active' : ''}`}>{loginError}</span>
     </AuthForm>
   );
 }

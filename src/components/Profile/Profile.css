@@ -65,13 +65,29 @@
   outline: none;
 }
 
+.profile__success {
+  position: absolute;
+  bottom: 75px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 1.21;
+  color: #4285F4;
+  font-size: 11px;
+  width: max-content;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+.profile__success_active {
+  opacity: 1;
+}
+
 .profile__error {
   position: absolute;
   line-height: 1.21;
   color: #EE3465;
   opacity: 0;
-  visibility: hidden;
-  transition: all .3s ease;
+  transition: opacity .3s ease;
 }
 
 .profile__error-item {
@@ -90,8 +106,6 @@
 
 .profile__error_active {
   opacity: 1;
-  visibility: visible;
-  transition: all .3s ease;
 }
 
 .profile__cancellation {
@@ -139,6 +153,7 @@
   font-weight: 500;
   color: #fff;
   cursor: pointer;
+  transition: all .3s ease;
 }
 
 .profile__btn-save:disabled {

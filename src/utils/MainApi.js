@@ -1,6 +1,7 @@
 class MainApi {
-  constructor({ baseUrl, headers }) {
+  constructor({ baseUrl, imageUrl }) {
     this._baseUrl = baseUrl;
+    this._imageUrl = imageUrl;
   }
 
   _returnRes(res) {
@@ -37,62 +38,52 @@ class MainApi {
     })
   }
 
-  // getCards() {
-  //   return this._request(`${this._baseUrl}/cards`, {
-  //     headers: {
-  //       authorization: `Bearer ${localStorage.getItem('jwt')}`,
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  // }
+  getMovies() {
+    return this._request(`${this._baseUrl}/movies`, {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json'
+      }
+    })
+  }
 
-  // generateCard(data) {
-  //   return this._request(`${this._baseUrl}/cards`, {
-  //     method: 'POST',
-  //     body: JSON.stringify({
-  //       name: data.name,
-  //       link: data.link
-  //     }),
-  //     headers: {
-  //       authorization: `Bearer ${localStorage.getItem('jwt')}`,
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  // }
+  saveMovie(movie) {
+    return this._request(`${this._baseUrl}/movies`, {
+      method: 'POST',
+      body: JSON.stringify({
+        movieId: movie.id,
+        nameRU: movie.nameRU,
+        nameEN: movie.nameEN,
+        director: movie.director,
+        country: movie.country,
+        year: movie.year,
+        duration: movie.duration,
+        description: movie.description,
+        trailerLink: movie.trailerLink,
+        image: `${this._imageUrl}${movie.image.url}`,
+        thumbnail: `${this._imageUrl}${movie.image.formats.thumbnail.url}`,
+      }),
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json'
+      },
+    });
+  }
 
-  // deleteCard(cardId) {
-  //   return this._request(`${this._baseUrl}/cards/${cardId}`, {
-  //     method: 'DELETE',
-  //     headers: {
-  //       authorization: `Bearer ${localStorage.getItem('jwt')}`,
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  // }
-
-  // setLikeCard(cardId) {
-  //   return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
-  //     method: 'PUT',
-  //     headers: {
-  //       authorization: `Bearer ${localStorage.getItem('jwt')}`,
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  // }
-
-  // deleteLikeCard(cardId) {
-  //   return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
-  //     method: 'DELETE',
-  //     headers: {
-  //       authorization: `Bearer ${localStorage.getItem('jwt')}`,
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  // }
+  deleteMovie(movieId) {
+    return this._request(`${this._baseUrl}/movies/${movieId}`, {
+      method: 'DELETE',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json'
+      }
+    })
+  }
 }
 
 const mainApi = new MainApi({
-  baseUrl: 'https://api.panfilok.diploma.nomoredomains.club'
+  baseUrl: 'https://api.panfilok.diploma.nomoredomains.club',
+  imageUrl: 'https://api.nomoreparties.co'
 });
 
 export default mainApi;

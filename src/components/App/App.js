@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 import './App.css';
@@ -13,15 +13,26 @@ import Login from '../Login/Login';
 import Register from '../Register/Register';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import ProtectedRoute from '../ProtectedRoute';
-import moviesAuth from '../../utils/moviesAuth';
+import moviesAuth from '../../utils/MoviesAuth';
 import mainApi from '../../utils/MainApi';
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [profileFormIsReadOnly, setProfileFormIsReadOnly] = useState(true);
+  const [preloader, setPreloader] = useState(false);
   const [formError, setFormError] = useState('');
+  const [formSuccess, setformSuccess] = useState(false);
+  const [savedMovies, setSavedMovies] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (pathname !== 'profile') {
+      setProfileFormIsReadOnly(true);
+    }
+  }, [location]);
 
   const auth = (jwt) => {
     return moviesAuth.validationToken(jwt).then((res) => {
@@ -41,12 +52,6 @@ function App() {
     }
   }, [loggedIn]);
 
-  useEffect(() => {
-    if (loggedIn) {
-      navigate('/movies');
-    }
-  }, [loggedIn]);
-
   const onRegister = ({ username, email, password }) => {
     return moviesAuth.register(username, email, password)
     .then((res) => {
@@ -56,7 +61,7 @@ function App() {
       onLogin({ email, password })
     })
     .then(() => {
-      navigate('/movies')
+      navigate('/movies', {replace: true})
     })
     .catch((err) => {
       if (err === 409) {
@@ -73,11 +78,12 @@ function App() {
     return moviesAuth.authorize(email, password).then((res) => {
       if (res.token) {
         localStorage.setItem('jwt', res.token);
+        localStorage.setItem('firstSearch', true);
         setLoggedIn(true);
       }
     })
     .then(() => {
-      navigate('/movies')
+      navigate('/movies', {replace: true});
     })
     .catch((err) => {
       if (err === 401) {
@@ -93,18 +99,29 @@ function App() {
   function signOut() {
     setLoggedIn(false);
     setCurrentUser({});
-    localStorage.removeItem('jwt');
-    navigate('/');
+    localStorage.clear();
+    navigate('/', {replace: true});
   }
 
   useEffect(() => {
-    mainApi.getUserInfo()
-    .then((res) => {
-      setCurrentUser(res);
-    })
-    .catch((err) => {
-      console.log(`Ошибка: ${err}`);
-    })
+    if (loggedIn) {
+      mainApi.getUserInfo()
+      .then((res) => {
+        setCurrentUser(res);
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+      })
+
+      mainApi.getMovies()
+      .then((res) => {
+        setSavedMovies(res);
+        localStorage.setItem('savedMovies', JSON.stringify(res));
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+      })
+    }
   }, [loggedIn])
 
   function handleEditUserInfo() {
@@ -116,6 +133,8 @@ function App() {
     .then((res) => {
       setCurrentUser(res);
       setProfileFormIsReadOnly(!profileFormIsReadOnly);
+      setformSuccess(true);
+      setTimeout(() => {setformSuccess(false)}, 4000);
     })
     .catch((err) => {
       if (err === 409) {
@@ -128,17 +147,46 @@ function App() {
     })
   }
 
+  function handleSaveMovie(movie) {
+    mainApi.saveMovie(movie)
+    .then((newMovie) => {
+      const updateSavedMovies = [newMovie, ...JSON.parse(localStorage.getItem('savedMovies'))];
+      setSavedMovies(updateSavedMovies);
+      localStorage.setItem('savedMovies', JSON.stringify(updateSavedMovies));
+    })
+    .catch((err) => {
+      console.log(`Ошибка: ${err}`);
+    })
+  }
+
+  function handleDeleteMovie(movieId) {
+    mainApi.deleteMovie(movieId)
+    .then(() => {
+      const updateSavedMovies = JSON.parse(localStorage.getItem('savedMovies')).filter(item => item._id !== movieId);
+      setSavedMovies(updateSavedMovies);
+      localStorage.setItem('savedMovies', JSON.stringify(updateSavedMovies));
+    })
+    .catch((err) => {
+      console.log(`Ошибка: ${err}`);
+    })
+  }
+
   return (
     <div className='page'>
       <CurrentUserContext.Provider value={currentUser}>
         <Routes>
-          <Route element={<PageLayout />}>
+          <Route element={<PageLayout loggedIn={loggedIn} />}>
             <Route path='/' element={<Main />} />
             <Route
               path='/movies'
               element={
                 <ProtectedRoute loggedIn={loggedIn}>
-                  <Movies />
+                  <Movies
+                    onSave={handleSaveMovie}
+                    onDelete={handleDeleteMovie}
+                    preloader={preloader}
+                    setPreloader={setPreloader}
+                  />
                 </ProtectedRoute>
               }
             />
@@ -146,7 +194,13 @@ function App() {
               path='/saved-movies'
               element={
                 <ProtectedRoute loggedIn={loggedIn}>
-                  <SavedMovies />
+                  <SavedMovies
+                    savedMovies={savedMovies}
+                    setSavedMovies={setSavedMovies}
+                    onDelete={handleDeleteMovie}
+                    preloader={preloader}
+                    setPreloader={setPreloader}
+                  />
                 </ProtectedRoute>
               }
             />
@@ -156,6 +210,7 @@ function App() {
                 <ProtectedRoute loggedIn={loggedIn}>
                   <Profile
                     isReadOnly={profileFormIsReadOnly}
+                    profileSuccess={formSuccess}
                     profileError={formError}
                     handleEdit={handleEditUserInfo}
                     onUpdateUser={handleUpdateUser}
