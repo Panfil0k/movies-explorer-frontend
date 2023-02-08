@@ -7,13 +7,20 @@ import MoviesCardList from './MoviesCardList/MoviesCardList';
 import moviesApi from '../../utils/MoviesApi';
 
 import filterMovies from '../../utils/filterMoviesDuration';
+import {
+  MOVIES_ON_DESKTOP,
+  MOVIES_ON_TABLET,
+  MOVIES_ON_MOBILE,
+  ADD_MOVIES_DESKTOP,
+  ADD_MOVIES_MOBILE
+} from '../../utils/constants'
 
 function Movies({ onSave, onDelete, preloader, setPreloader }) {
   const [moviesList, setMoviesList] = useState([]);
   const [searchError, setSearchError] = useState('');
   const [widthWindow, setWidthWindow] = React.useState(document.documentElement.clientWidth);
-  const moviesInRow = (widthWindow > 1024) ? 3 : 2;
-  const moviesInColumnStart = (widthWindow > 1024) ? 12 : (widthWindow > 600) ? 8 : 5;
+  const moviesInRow = (widthWindow > 1024) ? ADD_MOVIES_DESKTOP : ADD_MOVIES_MOBILE;
+  const moviesInColumnStart = (widthWindow > 1024) ? MOVIES_ON_DESKTOP : (widthWindow > 600) ? MOVIES_ON_TABLET : MOVIES_ON_MOBILE;
   const [moviesInColumn, setMoviesInColumn] = useState(moviesInColumnStart);
 
   function updateWidthWindow() {

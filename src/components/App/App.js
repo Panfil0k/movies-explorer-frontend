@@ -13,12 +13,13 @@ import Login from '../Login/Login';
 import Register from '../Register/Register';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import ProtectedRoute from '../ProtectedRoute';
+import PublicRoute from '../PublicRoute';
 import moviesAuth from '../../utils/MoviesAuth';
 import mainApi from '../../utils/MainApi';
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('jwt'));
   const [profileFormIsReadOnly, setProfileFormIsReadOnly] = useState(true);
   const [preloader, setPreloader] = useState(false);
   const [formError, setFormError] = useState('');
@@ -41,6 +42,7 @@ function App() {
       }
     })
     .catch((err) => {
+      signOut();
       console.log(`Ошибка: ${err}`);
     })
   }
@@ -49,6 +51,8 @@ function App() {
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
       auth(jwt);
+    } else {
+      signOut();
     }
   }, [loggedIn]);
 
@@ -220,8 +224,22 @@ function App() {
               }
             />
           </Route>
-          <Route path='/signin' element={<Login onLogin={onLogin} loginError={formError} />} />
-          <Route path='/signup' element={<Register onRegister={onRegister} registerError={formError} />} />
+          <Route
+            path='/signin'
+            element={
+              <PublicRoute loggedIn={loggedIn}>
+                <Login onLogin={onLogin} loginError={formError} />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path='/signup'
+            element={
+              <PublicRoute loggedIn={loggedIn}>
+                <Register onRegister={onRegister} registerError={formError} />
+              </PublicRoute>
+            }
+          />
           <Route path='*' element={<PageNotFound />} />
         </Routes>
       </CurrentUserContext.Provider>
