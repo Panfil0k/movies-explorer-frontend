@@ -14,7 +14,7 @@ import Register from '../Register/Register';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import ProtectedRoute from '../ProtectedRoute';
 import PublicRoute from '../PublicRoute';
-import moviesAuth from '../../utils/MoviesAuth';
+import moviesAuth from '../../utils/moviesAuth';
 import mainApi from '../../utils/MainApi';
 
 function App() {

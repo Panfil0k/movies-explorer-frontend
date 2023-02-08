@@ -13,7 +13,7 @@ function AboutMe() {
           <article className='about-me__info'>
             <h3 className='about-me__name'>Артём</h3>
             <p className='about-me__status'>Фронтенд-разработчик, 33&nbsp;года</p>
-            <p className='about-me__text'>Я&nbsp;живу в&nbsp;Тбилиси и&nbsp;учусь на&nbsp;курсе &laquo;Веб-разработчик&raquo; в&nbsp;Яндекс Практикум. Ранее почти два года занимался вёрсткой сайтов для студии Zet Graphics. Открыт к&nbsp;предложениям о&nbsp;работе и&nbsp;сотрудничестве.</p>
+            <p className='about-me__text'>На&nbsp;данный момент живу в&nbsp;Тбилиси. В&nbsp;феврале 2023 года закончил курс &laquo;Веб-разработчик&raquo; в&nbsp;Яндекс Практикум. Ранее почти два года занимался вёрсткой сайтов для студии Zet Graphics. Открыт к&nbsp;предложениям о&nbsp;работе и&nbsp;сотрудничестве.</p>
             <a className='about-me__link hovered' href='https://github.com/Panfil0k' target='_blank' rel='noopener noreferrer'>Github</a>
             <img src={photo} className='about-me__photo' alt='Артём Понамарчук' />
           </article>
