@@ -4,12 +4,12 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 
-function PageLayout() {
+function PageLayout({ loggedIn }) {
   const { pathname } = useLocation();
 
   return (
     <>
-      <Header />
+      <Header loggedIn={loggedIn} />
       <main>
         <Outlet />
       </main>

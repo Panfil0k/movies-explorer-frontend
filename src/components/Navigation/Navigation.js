@@ -38,13 +38,13 @@ function Navigation() {
             <Link to='/' className='nav__link hovered nav__link_to_main'>Главная</Link>
           </li>
           <li className='nav__item'>
-            <NavLink to="/movies" className={
-              ({isActive}) => `nav__link hovered ${isActive ? "nav__link_active" : ""}`
+            <NavLink to='/movies' className={
+              ({isActive}) => `nav__link hovered ${isActive ? 'nav__link_active' : ''}`
             }>Фильмы</NavLink>
           </li>
           <li className='nav__item'>
-            <NavLink to="/saved-movies" className={
-              ({isActive}) => `nav__link hovered ${isActive ? "nav__link_active" : ""}`
+            <NavLink to='/saved-movies' className={
+              ({isActive}) => `nav__link hovered ${isActive ? 'nav__link_active' : ''}`
             }>Сохранённые фильмы</NavLink>
             </li>
           <li className='nav__item'>

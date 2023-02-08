@@ -46,11 +46,17 @@
   height: 34px;
   border-radius: 48px;
   background-color: #4285F4;
-  background-image: url('../../images/search-icon.svg');
+  background-image: url('../../../images/search-icon.svg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 22px 22px;
   cursor: pointer;
+  transition: all .3s ease;
+}
+
+.search__btn:disabled {
+  background-color: #C2C2C2;
+  cursor: default;
 }
 
 .search__label {

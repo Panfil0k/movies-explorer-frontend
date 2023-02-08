@@ -6,7 +6,7 @@ import logo from '../../images/logo.svg';
 
 import Navigation from '../Navigation/Navigation';
 
-function Header() {
+function Header({ loggedIn }) {
   const { pathname } = useLocation();
 
   return (
@@ -15,7 +15,7 @@ function Header() {
           <Link to='/' className='header__logo-link'>
             <img src={logo} className='header__logo-img' alt='Логотип' />
           </Link>
-          { pathname === '/'
+          { !loggedIn
             ?
             <nav className='header__auth'>
               <Link to='/signup' className='header__registration hovered'>Регистрация</Link>

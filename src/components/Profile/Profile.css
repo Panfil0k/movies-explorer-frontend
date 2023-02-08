@@ -17,6 +17,14 @@
   font-weight: 500;
 }
 
+.profile__form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
 .profile__item {
   position: relative;
   display: flex;
@@ -57,24 +65,58 @@
   outline: none;
 }
 
-.profile__item-error {
+.profile__success {
   position: absolute;
-  bottom: -189px;
-  font-size: 11px;
-  line-height: 1.21;
-  color: #EE3465;
-  text-align: center;
+  bottom: 75px;
   left: 50%;
   transform: translate(-50%, -50%);
+  line-height: 1.21;
+  color: #4285F4;
+  font-size: 11px;
   width: max-content;
   opacity: 0;
-  visibility: hidden;
-  transition: all .3s ease;
+  transition: opacity .3s ease;
 }
 
-.profile__item-error_active {
+.profile__success_active {
   opacity: 1;
-  visibility: visible;
+}
+
+.profile__error {
+  position: absolute;
+  line-height: 1.21;
+  color: #EE3465;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+.profile__error-item {
+  font-size: 10px;
+  bottom: 3px;
+  left: 0;
+}
+
+.profile__error-form {
+  font-size: 11px;
+  bottom: 75px;
+  width: max-content;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.profile__error_active {
+  opacity: 1;
+}
+
+.profile__cancellation {
+  font-size: 11px;
+  color: #4285F4;
+  cursor: pointer;
+  position: absolute;
+  bottom: -15px;
+  width: max-content;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .profile__btn {
@@ -111,6 +153,7 @@
   font-weight: 500;
   color: #fff;
   cursor: pointer;
+  transition: all .3s ease;
 }
 
 .profile__btn-save:disabled {

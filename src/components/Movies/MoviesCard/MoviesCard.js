@@ -1,20 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import './MoviesCard.css';
 
-function MoviesCard({ movie }) {
-  const [select, setSelect] = useState(movie.select);
+import getTimeFromMins from '../../../utils/getTimeFromMins';
 
-  function handleSelect() {
-    setSelect(!select);
+function MoviesCard({ movie, onSave, onDelete }) {
+  const [saveMovie, setSaveMovie] = useState(false);
+
+  function handleSaveMovie() {
+    setSaveMovie(!saveMovie);
+
+    if(saveMovie) {
+      const savedMovies = JSON.parse(localStorage.getItem('savedMovies'));
+      onDelete(savedMovies.find(item => item.movieId === movie.id)._id);
+      return
+    }
+
+    onSave(movie);
   }
+
+  function checkSavedMovies() {
+    const savedMovies = JSON.parse(localStorage.getItem('savedMovies'));
+    setSaveMovie(savedMovies.some((data) => data.movieId === movie.id))
+  }
+
+  useEffect(() => {
+    checkSavedMovies();
+  }, [])
 
   return (
     <li className='movies__item'>
-      <img className='movies__item-image' src={movie.image} alt={movie.name} onClick={handleSelect} />
-      <h3 className='movies__item-title'>{movie.name}</h3>
-      <p className='movies__item-duration'>{movie.duration}</p>
-      <button className={`movies__item-select ${select ? 'movies__item-select_active' : ''}`} type='button' onClick={handleSelect}>Сохранить</button>
+      <a className='movies__item-link' href={movie.trailerLink} target='_blank' rel='noopener noreferrer'>
+        <img className='movies__item-image' src={`https://api.nomoreparties.co/${movie.image.url}`} alt={movie.nameRU} />
+      </a>
+      <h3 className='movies__item-title'>{movie.nameRU}</h3>
+      <p className='movies__item-duration'>{getTimeFromMins(movie.duration)}</p>
+      <button className={`movies__item-select ${saveMovie ? 'movies__item-select_active' : ''}`} type='button' onClick={handleSaveMovie}>Сохранить</button>
     </li>
   );
 }
